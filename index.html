@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <script src="sha512.min.js"></script>
+    <script src="base64.min.js"></script>
+    <script type="text/javascript">
+        function getValueOfElementBy(id) {
+          return document.getElementById(id).value;
+        }
+
+        function getBasePassword() {
+          return getValueOfElementBy("pwd_base");
+        }
+        function getDomain() {
+          return getValueOfElementBy("pwd_domain");
+        }
+        function getVersion() {
+          return getValueOfElementBy("pwd_version");
+        }
+        function getRules() {
+          return getValueOfElementBy("pwd_rules");
+        }
+
+        function convert(string) {
+          // https://stackoverflow.com/questions/38987784/how-to-convert-a-hexadecimal-string-to-uint8array-and-back-in-javascript
+
+          var bytes = new Uint8Array(Math.ceil(string.length / 2));
+          for (var i = 0; i < bytes.length; i++) bytes[i] = parseInt(string.substr(i * 2, 2), 16);
+          console.log(bytes);
+
+          var convertedBack = '';
+          for (var i = 0; i < bytes.length; i++) {
+            if (bytes[i] < 16) convertedBack += '0';
+            convertedBack += bytes[i].toString(16);
+          }
+          console.log(convertedBack);
+          return convertedBack;
+        }
+
+        function combine(a, b, c, d) {
+          return a + b + c + d;
+        }
+
+        function encode(hexStringDigest, rules) {
+          // current implementation
+          const u8aryPassword = convert(hexStringDigest);
+          return Base64.encode(u8aryPassword);
+        }
+
+        function generate() {
+          const rules = getRules()
+          const combined = combine(getBasePassword(), getDomain(), getVersion(), rules);
+          const hexStringDigest = sha512(combined);
+          
+          return encode(hexStringDigest, rules);
+        }
+
+        function generateAndPrint() {
+          const password = generate();
+          document.getElementById("pwd_generated").value = password;
+        }
+    </script>
+  </head>
+  <body>
+    <label for="pwd_base">Base password:</label>
+    <input type="text" id="pwd_base" name="pwd_base"><br><br>
+    <label for="pwd_domain">Domain:</label>
+    <input type="text" id="pwd_domain" name="pwd_domain"><br><br>
+    <label for="pwd_version">Version:</label>
+    <input type="text" id="pwd_version" name="pwd_version"><br><br>
+    <label for="pwd_rules">Rules:</label>
+    <input type="text" id="pwd_rules" name="pwd_rules"><br><br>
+    <input type="submit" value="Generate" onclick="generateAndPrint()"><br><br>
+    <label for="pwd_generated">Generated password:</label>
+    <input type="text" id="pwd_generated" name="pwd_generated"><br><br>
+  </body>
+</html>
