@@ -15,13 +15,19 @@ Or if in an emergency you need to share a password for a specific service with s
 
 ## What must be remembered
 
-The `{ digest(combination(basePassword, domain)) => version }` map.
+The `version` for each `domain` must be remebered.
+
+### Not privacy conscious ways to store that
 
 The plain map `{ domain => version }`, if leaked, could reveal which services you access. Not very privacy oriented, right?
 
 If we replaced `domain` with `digest(domain)` it would be not obvious at plain sight which services you do access, but the number of services is not large enough to deter [dictionary](https://en.wikipedia.org/wiki/Dictionary_attack) or [rainbow table](https://en.wikipedia.org/wiki/Rainbow_table) attacks.
 
-By using the digest of the `domain` salted with `basePassword`, such attacks are no longer possible. Therefore, if the map leaks, it exposes nothing of relevance about you.
+### The privacy conscious way to store that
+
+By using the digest of the `domain` salted with `basePassword`, such attacks are no longer possible. Therefore, if the map `{ digest(combination(basePassword, domain)) => version }` leaks, it exposes no sensitive information about you. (The number of domains you have passwords for or how many passwords you have had for each is not considered sensistive.)
+
+Sure, if you change you `basePassword` you will be unable to know the versions for each `domain`, but that would mean a new password for every `domain` anyway.
 
 ## What about the rules
 
