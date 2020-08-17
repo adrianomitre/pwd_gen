@@ -21,7 +21,7 @@ Or if in an emergency you need to share a password for a specific service with s
 ```json
 {
   "required": {
-    "lowercase": "<< int >>",
+    "lowercase": "<< int >>", // n = 0 => don't care, n < 0 => not allowed
     "uppercase": "<< int >>",
     "digits": "<< int >>",
     "hyphen": "<< int >>",
@@ -33,7 +33,9 @@ Or if in an emergency you need to share a password for a specific service with s
   "length": {
     "min": "<< int n : n > 0 >>",
     "max": "<< int n : n >= min >>"
-  }
+  },
+  "max_consecutive": "<< int n : n >= 0 >>", // ex: "123" or "abc", n = 0 => don't care, n = 1 => no consecutive sequences allowed
+  "max_repeat_sequence": "<< int n : n >= 0 >>", // ex: "11" or "aa"", n = 0 => don't care, n = 1 => no repeat sequences allowed
 }
 ```
 
