@@ -18,7 +18,7 @@ Or if in an emergency you need to share a password for a specific service with s
 
 ### Password encoding rules format
 
-```hjson
+```javascript
 {
   "required": {
     "lowercase": "<< int >>", // n = 0 => don't care, n < 0 => not allowed
